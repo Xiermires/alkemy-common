@@ -42,6 +42,6 @@ instrs = @Instr(classNames = { //
         "org.alkemy.common.visitor.impl.TestWriter$NestedB", //
         "org.alkemy.common.visitor.impl.TestVisitorController"}, ctf = AlkemizerCTF.class))
 
-public class AlkemyCommonInstrTestSuite
+public class InstrTestSuite
 {
 }
