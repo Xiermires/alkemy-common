@@ -16,10 +16,10 @@
 package org.alkemy.common;
 
 import static org.alkemy.common.visitor.impl.AbstractTraverser.VISIT_NODES;
+import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
 import java.lang.annotation.ElementType;
@@ -36,16 +36,15 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import org.alkemy.annotations.AlkemyLeaf;
-import org.alkemy.common.Alkemy;
 import org.alkemy.common.Alkemy.SingleTypeReader;
 import org.alkemy.common.parse.impl.VisitableAlkemyElement;
 import org.alkemy.common.util.PassThrough;
 import org.alkemy.common.visitor.AlkemyElementVisitor;
 import org.alkemy.common.visitor.AlkemyNodeHandler;
-import org.alkemy.parse.impl.MethodInvoker;
+import org.alkemy.parse.MethodInvoker;
 import org.alkemy.util.Measure;
 import org.alkemy.util.Node;
-import org.alkemy.util.Nodes.RootNode;
+import org.alkemy.util.Nodes.TypedNode;
 import org.junit.Test;
 
 // Alkemy general usage examples.
@@ -109,7 +108,7 @@ public class AlkemyTest
         final TestClass tc2 = new TestClass();
         tc1.s0 = "foo";
         tc2.s1 = "bar";
-        final RootNode<TestClass, ? extends VisitableAlkemyElement> node = Alkemy.rootNode(TestClass.class);
+        final TypedNode<TestClass, ? extends VisitableAlkemyElement> node = Alkemy.rootNode(TestClass.class);
         final ObjectCopier<TestClass> oc = new ObjectCopier<TestClass>();
 
         final List<String> s0s1 = new ArrayList<>();
@@ -119,7 +118,7 @@ public class AlkemyTest
             s0s1.add(tc.s1);
         }
 
-        assertThat(s0s1, contains("foo", "1", "0", "bar"));
+        assertThat(s0s1, hasItems("foo", "1", "0", "bar"));
         final StringBuilder sb = new StringBuilder();
         oc.iterable(node, Arrays.asList(tc1, tc2)).forEach(e -> sb.append(e.s0).append(e.s1));
         assertThat(sb.toString(), is("foo10bar"));
@@ -253,7 +252,7 @@ public class AlkemyTest
     @Test
     public void peformanceFastVisitorAssign() throws Throwable
     {
-        final RootNode<TestFastVisitor, ? extends VisitableAlkemyElement> node = Alkemy.rootNode(TestFastVisitor.class);
+        final TypedNode<TestFastVisitor, ? extends VisitableAlkemyElement> node = Alkemy.rootNode(TestFastVisitor.class);
         final FastSameFlatObjConcept<TestFastVisitor> anv = new FastSameFlatObjConcept<>();
         final TestFastVisitor tfv = new TestFastVisitor();
 
@@ -269,7 +268,7 @@ public class AlkemyTest
     @Test
     public void peformanceFastVisitorAssignUsingParallelStream() throws Throwable
     {
-        final RootNode<TestFastVisitor, ? extends VisitableAlkemyElement> node = Alkemy.rootNode(TestFastVisitor.class);
+        final TypedNode<TestFastVisitor, ? extends VisitableAlkemyElement> node = Alkemy.rootNode(TestFastVisitor.class);
         final FastSameFlatObjConcept<TestFastVisitor> anv = new FastSameFlatObjConcept<>();
         final TestFastVisitor tfv = new TestFastVisitor();
 
@@ -289,7 +288,7 @@ public class AlkemyTest
     @Test
     public void peformanceFastVisitorCreate() throws Throwable
     {
-        final RootNode<TestFastVisitor, ? extends VisitableAlkemyElement> node = Alkemy.rootNode(TestFastVisitor.class);
+        final TypedNode<TestFastVisitor, ? extends VisitableAlkemyElement> node = Alkemy.rootNode(TestFastVisitor.class);
         final FastSameFlatObjConcept<TestFastVisitor> anv = new FastSameFlatObjConcept<>();
 
         System.out.println("Fast visitor 1e6 create (10 fields): " + Measure.measure(() ->
@@ -328,7 +327,7 @@ public class AlkemyTest
 
         // create
         @Override
-        public R create(RootNode<R, ? extends VisitableAlkemyElement> node)
+        public R create(TypedNode<R, ? extends VisitableAlkemyElement> node)
         {
             args = args != null ? args : new Object[node.children().size()];
             if (mapped == null) // map once
@@ -344,7 +343,7 @@ public class AlkemyTest
 
         // assign
         @Override
-        public R handle(RootNode<R, ? extends VisitableAlkemyElement> node, R parent)
+        public R handle(TypedNode<R, ? extends VisitableAlkemyElement> node, R parent)
         {
             if (mapped == null)
             {

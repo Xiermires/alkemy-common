@@ -19,7 +19,7 @@ import org.alkemy.common.parse.impl.VisitableAlkemyElement;
 import org.alkemy.common.visitor.AlkemyElementVisitor;
 import org.alkemy.common.visitor.AlkemyNodeHandler;
 import org.alkemy.common.visitor.AlkemyNodeReader;
-import org.alkemy.util.Nodes.RootNode;
+import org.alkemy.util.Nodes.TypedNode;
 
 /**
  * Adapter between a reader and a visitor to access the Iterable functionality.
@@ -36,13 +36,13 @@ public class NodeReaderToVisitorAdapter<R, P> implements AlkemyNodeReader<R, P>,
     }
 
     @Override
-    public R create(RootNode<R, ? extends VisitableAlkemyElement> node)
+    public R create(TypedNode<R, ? extends VisitableAlkemyElement> node)
     {
         return reader.create(aev, node);
     }
 
     @Override
-    public R create(RootNode<R, ? extends VisitableAlkemyElement> node, P parameter)
+    public R create(TypedNode<R, ? extends VisitableAlkemyElement> node, P parameter)
     {
         return reader.create(aev, node, parameter);
     }

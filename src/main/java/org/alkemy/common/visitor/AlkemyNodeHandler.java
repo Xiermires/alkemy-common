@@ -23,7 +23,7 @@ import java.util.stream.StreamSupport;
 
 import org.alkemy.common.parse.impl.VisitableAlkemyElement;
 import org.alkemy.util.Node;
-import org.alkemy.util.Nodes.RootNode;
+import org.alkemy.util.Nodes.TypedNode;
 
 /**
  * A class implementing this interface is expected to process trees of alkemy elements w/o
@@ -42,7 +42,7 @@ public interface AlkemyNodeHandler<R, P>
     /**
      * Generates an element of type R.
      */
-    default R create(RootNode<R, ? extends VisitableAlkemyElement> node)
+    default R create(TypedNode<R, ? extends VisitableAlkemyElement> node)
     {
         throw new UnsupportedOperationException("Not implemented.");
     }
@@ -50,7 +50,7 @@ public interface AlkemyNodeHandler<R, P>
     /**
      * Generates an element of type R using a parameter P.
      */
-    default R create(RootNode<R, ? extends VisitableAlkemyElement> node, P parameter)
+    default R create(TypedNode<R, ? extends VisitableAlkemyElement> node, P parameter)
     {
         throw new UnsupportedOperationException("Not implemented.");
     }
@@ -58,7 +58,7 @@ public interface AlkemyNodeHandler<R, P>
     /**
      * Generates an element of type R, or modifies and returns the received param1 of type R.
      */
-    default R handle(RootNode<R, ? extends VisitableAlkemyElement> node, R parameter)
+    default R handle(TypedNode<R, ? extends VisitableAlkemyElement> node, R parameter)
     {
         throw new UnsupportedOperationException("Not implemented.");
     }
@@ -67,7 +67,7 @@ public interface AlkemyNodeHandler<R, P>
      * Generates an element of type R, or modifies and returns the received param1 of type R, using
      * the param2 of type P.
      */
-    default R handle(RootNode<R, ? extends VisitableAlkemyElement> node, R param1, P param2)
+    default R handle(TypedNode<R, ? extends VisitableAlkemyElement> node, R param1, P param2)
     {
         throw new UnsupportedOperationException("Not implemented.");
     }
@@ -75,41 +75,41 @@ public interface AlkemyNodeHandler<R, P>
     /* * STREAM SUPPORT * */
 
     /**
-     * Stream of {@link #iterable(RootNode, Iterable)}
+     * Stream of {@link #iterable(TypedNode, Iterable)}
      */
-    default Stream<R> stream(RootNode<R, ? extends VisitableAlkemyElement> node, Iterable<R> items)
+    default Stream<R> stream(TypedNode<R, ? extends VisitableAlkemyElement> node, Iterable<R> items)
     {
         return StreamSupport.stream(Spliterators.spliterator(iterable(node, items).iterator(), -1, 0), false);
     }
 
     /**
-     * Stream of {@link #iterable(RootNode, Iterator)}
+     * Stream of {@link #iterable(TypedNode, Iterator)}
      */
-    default Stream<R> stream(RootNode<R, ? extends VisitableAlkemyElement> node, Iterator<R> items)
+    default Stream<R> stream(TypedNode<R, ? extends VisitableAlkemyElement> node, Iterator<R> items)
     {
         return StreamSupport.stream(Spliterators.spliterator(iterable(node, items).iterator(), -1, 0), false);
     }
 
     /**
-     * Stream of {@link #peekIterable(RootNode, Iterable)}
+     * Stream of {@link #peekIterable(TypedNode, Iterable)}
      */
-    default Stream<Entry<R, P>> peekStream(RootNode<R, ? extends VisitableAlkemyElement> node, Iterable<P> items)
+    default Stream<Entry<R, P>> peekStream(TypedNode<R, ? extends VisitableAlkemyElement> node, Iterable<P> items)
     {
         return StreamSupport.stream(Spliterators.spliterator(peekIterable(node, items).iterator(), -1, 0), false);
     }
 
     /**
-     * Stream of {@link #iterable(RootNode, Iterator)}
+     * Stream of {@link #iterable(TypedNode, Iterator)}
      */
-    default Stream<Entry<R, P>> peekStream(RootNode<R, ? extends VisitableAlkemyElement> node, Iterator<P> items)
+    default Stream<Entry<R, P>> peekStream(TypedNode<R, ? extends VisitableAlkemyElement> node, Iterator<P> items)
     {
         return StreamSupport.stream(Spliterators.spliterator(peekIterable(node, items).iterator(), -1, 0), false);
     }
 
     /**
-     * Stream of {@link #iterable(RootNode, Supplier)}
+     * Stream of {@link #iterable(TypedNode, Supplier)}
      */
-    default Stream<R> stream(RootNode<R, ? extends VisitableAlkemyElement> node, Supplier<Boolean> hasNext)
+    default Stream<R> stream(TypedNode<R, ? extends VisitableAlkemyElement> node, Supplier<Boolean> hasNext)
     {
         return StreamSupport.stream(Spliterators.spliterator(iterable(node, hasNext).iterator(), -1, 0), false);
     }
@@ -117,41 +117,41 @@ public interface AlkemyNodeHandler<R, P>
     /* * PARALLEL STREAM SUPPORT * */
 
     /**
-     * Parallel stream of {@link #iterable(RootNode, Iterable)}
+     * Parallel stream of {@link #iterable(TypedNode, Iterable)}
      */
-    default Stream<R> parallelStream(RootNode<R, ? extends VisitableAlkemyElement> node, Iterable<R> items)
+    default Stream<R> parallelStream(TypedNode<R, ? extends VisitableAlkemyElement> node, Iterable<R> items)
     {
         return StreamSupport.stream(Spliterators.spliterator(iterable(node, items).iterator(), Long.MAX_VALUE, 0), true);
     }
 
     /**
-     * Parallel stream of {@link #iterable(RootNode, Iterator)}
+     * Parallel stream of {@link #iterable(TypedNode, Iterator)}
      */
-    default Stream<R> parallelStream(RootNode<R, ? extends VisitableAlkemyElement> node, Iterator<R> items)
+    default Stream<R> parallelStream(TypedNode<R, ? extends VisitableAlkemyElement> node, Iterator<R> items)
     {
         return StreamSupport.stream(Spliterators.spliterator(iterable(node, items).iterator(), Long.MAX_VALUE, 0), true);
     }
 
     /**
-     * Parallel stream of {@link #peekIterable(RootNode, Iterable)}
+     * Parallel stream of {@link #peekIterable(TypedNode, Iterable)}
      */
-    default Stream<Entry<R, P>> parallelPeekStream(RootNode<R, ? extends VisitableAlkemyElement> node, Iterable<P> items)
+    default Stream<Entry<R, P>> parallelPeekStream(TypedNode<R, ? extends VisitableAlkemyElement> node, Iterable<P> items)
     {
         return StreamSupport.stream(Spliterators.spliterator(peekIterable(node, items).iterator(), Long.MAX_VALUE, 0), true);
     }
 
     /**
-     * Parallel stream of {@link #peekIterable(RootNode, Iterator)}
+     * Parallel stream of {@link #peekIterable(TypedNode, Iterator)}
      */
-    default Stream<Entry<R, P>> parallelPeekStream(RootNode<R, ? extends VisitableAlkemyElement> node, Iterator<P> items)
+    default Stream<Entry<R, P>> parallelPeekStream(TypedNode<R, ? extends VisitableAlkemyElement> node, Iterator<P> items)
     {
         return StreamSupport.stream(Spliterators.spliterator(peekIterable(node, items).iterator(), Long.MAX_VALUE, 0), true);
     }
 
     /**
-     * Parallel stream of {@link #iterable(RootNode, Supplier)}
+     * Parallel stream of {@link #iterable(TypedNode, Supplier)}
      */
-    default Stream<R> parallelStream(RootNode<R, ? extends VisitableAlkemyElement> node, Supplier<Boolean> hasNext)
+    default Stream<R> parallelStream(TypedNode<R, ? extends VisitableAlkemyElement> node, Supplier<Boolean> hasNext)
     {
         return StreamSupport.stream(Spliterators.spliterator(iterable(node, hasNext).iterator(), Long.MAX_VALUE, 0), true);
     }
@@ -165,7 +165,7 @@ public interface AlkemyNodeHandler<R, P>
      * <p>
      * Items are lazily fetched.
      */
-    default Iterable<R> iterable(RootNode<R, ? extends VisitableAlkemyElement> node, Iterable<R> items)
+    default Iterable<R> iterable(TypedNode<R, ? extends VisitableAlkemyElement> node, Iterable<R> items)
     {
         return new ProcessIterable<R, P>(this, node, items.iterator());
     }
@@ -173,7 +173,7 @@ public interface AlkemyNodeHandler<R, P>
     /**
      * Syntax sugar. See {@link #iterable(Node, Iterable)}
      */
-    default Iterable<R> iterable(RootNode<R, ? extends VisitableAlkemyElement> node, Iterator<R> items)
+    default Iterable<R> iterable(TypedNode<R, ? extends VisitableAlkemyElement> node, Iterator<R> items)
     {
         return new ProcessIterable<R, P>(this, node, items);
     }
@@ -194,7 +194,7 @@ public interface AlkemyNodeHandler<R, P>
      * If we have an Iterable &lt;P&gt; containing {1, 2, 3, 4} and applying
      * {@link AlkemyNodeHandler} to each P would result in the following iterator {2, 3, 4, 5} (P +
      * 1). <br>
-     * The {@link #peekIterable(RootNode, Iterable)} function will return the following Entries:
+     * The {@link #peekIterable(TypedNode, Iterable)} function will return the following Entries:
      * <ol>
      * <li>Entry 1 : {null, 1}
      * <li>Entry 2 : {1, 2}
@@ -206,7 +206,7 @@ public interface AlkemyNodeHandler<R, P>
      * The iterator finishes ({@link Iterator#hasNext()} equals false) when the
      * {@link AlkemyNodeHandler} has been applied to the all P, hence after Entry 6.
      */
-    default Iterable<Entry<R, P>> peekIterable(RootNode<R, ? extends VisitableAlkemyElement> node, Iterable<P> items)
+    default Iterable<Entry<R, P>> peekIterable(TypedNode<R, ? extends VisitableAlkemyElement> node, Iterable<P> items)
     {
         return new PeekIterable<R, P>(this, node, items.iterator());
     }
@@ -214,7 +214,7 @@ public interface AlkemyNodeHandler<R, P>
     /**
      * Syntax sugar. See {@link #iterable(Node, Iterable)}
      */
-    default Iterable<Entry<R, P>> peekIterable(RootNode<R, ? extends VisitableAlkemyElement> node, Iterator<P> items)
+    default Iterable<Entry<R, P>> peekIterable(TypedNode<R, ? extends VisitableAlkemyElement> node, Iterator<P> items)
     {
         return new PeekIterable<R, P>(this, node, items);
     }
@@ -225,7 +225,7 @@ public interface AlkemyNodeHandler<R, P>
      * The items are lazily generated on each {@link Iterator#next()} call until the hasNext
      * function returns false.
      */
-    default Iterable<R> iterable(RootNode<R, ? extends VisitableAlkemyElement> node, Supplier<Boolean> hasNext)
+    default Iterable<R> iterable(TypedNode<R, ? extends VisitableAlkemyElement> node, Supplier<Boolean> hasNext)
     {
         return new CreateIterable<R, P>(this, node, hasNext);
     }
@@ -233,9 +233,9 @@ public interface AlkemyNodeHandler<R, P>
     static abstract class AbstractIter<R, P>
     {
         protected final AlkemyNodeHandler<R, P> visitor;
-        protected final RootNode<R, ? extends VisitableAlkemyElement> node;
+        protected final TypedNode<R, ? extends VisitableAlkemyElement> node;
 
-        protected AbstractIter(AlkemyNodeHandler<R, P> visitor, RootNode<R, ? extends VisitableAlkemyElement> node)
+        protected AbstractIter(AlkemyNodeHandler<R, P> visitor, TypedNode<R, ? extends VisitableAlkemyElement> node)
         {
             this.visitor = visitor;
             this.node = node;
@@ -246,7 +246,7 @@ public interface AlkemyNodeHandler<R, P>
     {
         private final Iterator<P> items;
 
-        PeekIterable(AlkemyNodeHandler<R, P> visitor, RootNode<R, ? extends VisitableAlkemyElement> node, Iterator<P> items)
+        PeekIterable(AlkemyNodeHandler<R, P> visitor, TypedNode<R, ? extends VisitableAlkemyElement> node, Iterator<P> items)
         {
             super(visitor, node);
             this.items = items;
@@ -263,7 +263,7 @@ public interface AlkemyNodeHandler<R, P>
     {
         private final Supplier<Boolean> hasNext;
 
-        CreateIterable(AlkemyNodeHandler<R, P> visitor, RootNode<R, ? extends VisitableAlkemyElement> node,
+        CreateIterable(AlkemyNodeHandler<R, P> visitor, TypedNode<R, ? extends VisitableAlkemyElement> node,
                 Supplier<Boolean> hasNext)
         {
             super(visitor, node);
@@ -281,7 +281,7 @@ public interface AlkemyNodeHandler<R, P>
     {
         private final Iterator<R> items;
 
-        ProcessIterable(AlkemyNodeHandler<R, P> visitor, RootNode<R, ? extends VisitableAlkemyElement> node,
+        ProcessIterable(AlkemyNodeHandler<R, P> visitor, TypedNode<R, ? extends VisitableAlkemyElement> node,
                 Iterator<R> items)
         {
             super(visitor, node);
@@ -301,7 +301,7 @@ public interface AlkemyNodeHandler<R, P>
         private P next;
         private final Iterator<P> items;
 
-        PeekIterator(AlkemyNodeHandler<R, P> visitor, RootNode<R, ? extends VisitableAlkemyElement> node, Iterator<P> items)
+        PeekIterator(AlkemyNodeHandler<R, P> visitor, TypedNode<R, ? extends VisitableAlkemyElement> node, Iterator<P> items)
         {
             super(visitor, node);
             this.items = items;
@@ -335,7 +335,7 @@ public interface AlkemyNodeHandler<R, P>
     {
         private final Supplier<Boolean> hasNext;
 
-        CreateIterator(AlkemyNodeHandler<R, P> visitor, RootNode<R, ? extends VisitableAlkemyElement> node,
+        CreateIterator(AlkemyNodeHandler<R, P> visitor, TypedNode<R, ? extends VisitableAlkemyElement> node,
                 Supplier<Boolean> hasNext)
         {
             super(visitor, node);
@@ -359,7 +359,7 @@ public interface AlkemyNodeHandler<R, P>
     {
         private final Iterator<R> items;
 
-        ProcessIterator(AlkemyNodeHandler<R, P> visitor, RootNode<R, ? extends VisitableAlkemyElement> node,
+        ProcessIterator(AlkemyNodeHandler<R, P> visitor, TypedNode<R, ? extends VisitableAlkemyElement> node,
                 Iterator<R> items)
         {
             super(visitor, node);

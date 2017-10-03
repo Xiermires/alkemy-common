@@ -24,7 +24,7 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-import org.agenttools.AgentTools;
+import org.agenttools.Agents;
 import org.alkemy.annotations.AlkemyLeaf;
 import org.alkemy.common.parse.impl.VisitableAlkemyElement;
 import org.alkemy.common.visitor.AlkemyElementVisitor;
@@ -34,12 +34,12 @@ import org.alkemy.common.visitor.AlkemyNodeHandler.Entry;
 import org.alkemy.common.visitor.impl.AlkemyPostorderReader;
 import org.alkemy.common.visitor.impl.AlkemyPreorderReader;
 import org.alkemy.common.visitor.impl.NodeReaderToVisitorAdapter;
+import org.alkemy.instr.AlkemizerCTF;
 import org.alkemy.parse.AlkemyParser;
-import org.alkemy.parse.impl.AlkemizerCTF;
 import org.alkemy.parse.impl.AlkemyElement;
 import org.alkemy.parse.impl.AlkemyParsers;
 import org.alkemy.util.Node;
-import org.alkemy.util.Nodes.RootNode;
+import org.alkemy.util.Nodes.TypedNode;
 
 /**
  * The Alkemy library allows applying user specific {@link AlkemyNodeReader},
@@ -73,7 +73,7 @@ public class Alkemy
     {
         if (!instrumenting)
         {
-            AgentTools.add(new AlkemizerCTF());
+            Agents.add(new AlkemizerCTF());
             instrumenting = true;
         }
     }
@@ -151,15 +151,15 @@ public class Alkemy
         return new ReaderFactory<R, P>(rootNode(retType));
     }
     
-    public static <R> RootNode<R, VisitableAlkemyElement> rootNode(Class<R> r) {
-        return RootNode.create(r, f -> new VisitableAlkemyElement(f));
+    public static <R> TypedNode<R, VisitableAlkemyElement> rootNode(Class<R> r) {
+        return TypedNode.create(r, f -> new VisitableAlkemyElement(f));
     }
 
     public static class ReaderFactory<R, P>
     {
-        private final RootNode<R, ? extends VisitableAlkemyElement> root;
+        private final TypedNode<R, ? extends VisitableAlkemyElement> root;
 
-        private ReaderFactory(RootNode<R, ? extends VisitableAlkemyElement> root)
+        private ReaderFactory(TypedNode<R, ? extends VisitableAlkemyElement> root)
         {
             this.root = root;
         }
@@ -182,10 +182,10 @@ public class Alkemy
      */
     public static class SingleTypeReader<R, P>
     {
-        private final RootNode<R, ? extends VisitableAlkemyElement> root;
+        private final TypedNode<R, ? extends VisitableAlkemyElement> root;
         private final AlkemyNodeReader<R, P> anv;
 
-        SingleTypeReader(RootNode<R, ? extends VisitableAlkemyElement> root, AlkemyNodeReader<R, P> anv)
+        SingleTypeReader(TypedNode<R, ? extends VisitableAlkemyElement> root, AlkemyNodeReader<R, P> anv)
         {
             this.root = root;
             this.anv = anv;
@@ -227,7 +227,7 @@ public class Alkemy
         /* * STREAM SUPPORT * */
 
         /**
-         * Stream of {@link #iterable(RootNode, Iterable)}
+         * Stream of {@link #iterable(TypedNode, Iterable)}
          */
         public Stream<R> stream(AlkemyElementVisitor<P, ?> aev, Iterable<R> items)
         {
@@ -235,7 +235,7 @@ public class Alkemy
         }
 
         /**
-         * Stream of {@link #iterable(RootNode, Iterator)}
+         * Stream of {@link #iterable(TypedNode, Iterator)}
          */
         public Stream<R> stream(AlkemyElementVisitor<P, ?> aev, Iterator<R> items)
         {
@@ -243,7 +243,7 @@ public class Alkemy
         }
 
         /**
-         * Stream of {@link #peekIterable(RootNode, Iterable)}
+         * Stream of {@link #peekIterable(TypedNode, Iterable)}
          */
         public Stream<Entry<R, P>> peekStream(AlkemyElementVisitor<P, ?> aev, Iterable<P> items)
         {
@@ -251,7 +251,7 @@ public class Alkemy
         }
 
         /**
-         * Stream of {@link #iterable(RootNode, Iterator)}
+         * Stream of {@link #iterable(TypedNode, Iterator)}
          */
         public Stream<Entry<R, P>> peekStream(AlkemyElementVisitor<P, ?> aev, Iterator<P> items)
         {
@@ -259,7 +259,7 @@ public class Alkemy
         }
 
         /**
-         * Stream of {@link #iterable(RootNode, Supplier)}
+         * Stream of {@link #iterable(TypedNode, Supplier)}
          */
         public Stream<R> stream(AlkemyElementVisitor<P, ?> aev, Supplier<Boolean> hasNext)
         {
@@ -269,7 +269,7 @@ public class Alkemy
         /* * PARALLEL STREAM SUPPORT * */
 
         /**
-         * Parallel stream of {@link #iterable(RootNode, Iterable)}
+         * Parallel stream of {@link #iterable(TypedNode, Iterable)}
          */
         public Stream<R> parallelStream(AlkemyElementVisitor<P, ?> aev, Iterable<R> items)
         {
@@ -277,7 +277,7 @@ public class Alkemy
         }
 
         /**
-         * Parallel stream of {@link #iterable(RootNode, Iterator)}
+         * Parallel stream of {@link #iterable(TypedNode, Iterator)}
          */
         public Stream<R> parallelStream(AlkemyElementVisitor<P, ?> aev, Iterator<R> items)
         {
@@ -285,7 +285,7 @@ public class Alkemy
         }
 
         /**
-         * Parallel stream of {@link #peekIterable(RootNode, Iterable)}
+         * Parallel stream of {@link #peekIterable(TypedNode, Iterable)}
          */
         public Stream<Entry<R, P>> parallelPeekStream(AlkemyElementVisitor<P, ?> aev, Iterable<P> items)
         {
@@ -293,7 +293,7 @@ public class Alkemy
         }
 
         /**
-         * Parallel stream of {@link #peekIterable(RootNode, Iterator)}
+         * Parallel stream of {@link #peekIterable(TypedNode, Iterator)}
          */
         public Stream<Entry<R, P>> parallelPeekStream(AlkemyElementVisitor<P, ?> aev, Iterator<P> items)
         {
@@ -301,7 +301,7 @@ public class Alkemy
         }
 
         /**
-         * Parallel stream of {@link #iterable(RootNode, Supplier)}
+         * Parallel stream of {@link #iterable(TypedNode, Supplier)}
          */
         public Stream<R> parallelStream(AlkemyElementVisitor<P, ?> aev, Supplier<Boolean> hasNext)
         {

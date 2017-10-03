@@ -29,6 +29,7 @@ import java.lang.annotation.Target;
 import java.util.Arrays;
 import java.util.Stack;
 
+import org.alkemy.Bar;
 import org.alkemy.annotations.AlkemyLeaf;
 import org.alkemy.common.Alkemy;
 import org.alkemy.common.Alkemy.SingleTypeReader;
@@ -36,14 +37,9 @@ import org.alkemy.common.parse.impl.VisitableAlkemyElement;
 import org.alkemy.common.util.AbstractAlkemyValueProvider;
 import org.alkemy.common.visitor.AlkemyElementVisitor;
 import org.alkemy.common.visitor.AlkemyValueProvider;
-import org.alkemy.common.visitor.impl.AlkemyFlatNodeReader;
-import org.alkemy.common.visitor.impl.AlkemyPostorderReader;
-import org.alkemy.common.visitor.impl.AlkemyPreorderReader;
-import org.alkemy.common.visitor.impl.AlkemyVisitorController;
-import org.alkemy.common.visitor.impl.AlkemyVisitorTests.ObjectReader.Bar;
 import org.alkemy.common.visitor.impl.TestReader.NestedA;
 import org.alkemy.util.Measure;
-import org.alkemy.util.Nodes.RootNode;
+import org.alkemy.util.Nodes.TypedNode;
 import org.junit.Test;
 
 public class AlkemyVisitorTests
@@ -60,7 +56,7 @@ public class AlkemyVisitorTests
     public void testWriteAnObjUsingPreorderVisitor()
     {
         final AlkemyPreorderReader<TestWriter, Object> aew = new AlkemyPreorderReader<>(INCLUDE_NULL_BRANCHES | INSTANTIATE_NODES);
-        final RootNode<TestWriter, ? extends VisitableAlkemyElement> node = Alkemy.rootNode(TestWriter.class);
+        final TypedNode<TestWriter, ? extends VisitableAlkemyElement> node = Alkemy.rootNode(TestWriter.class);
         final ObjectWriter ow = new ObjectWriter(new Constant<>(55));
         final TestWriter tw = TestWriter.class.cast(aew.create(ow, node));
 
@@ -79,7 +75,7 @@ public class AlkemyVisitorTests
     {
         final AlkemyElementWriter<TestClass, Object> aew = new AlkemyElementWriter<>();
         final ObjectWriter ow = new ObjectWriter(new Constant<VisitableAlkemyElement>(55));
-        final RootNode<TestClass, ? extends VisitableAlkemyElement> node = Alkemy.rootNode(TestClass.class);
+        final TypedNode<TestClass, ? extends VisitableAlkemyElement> node = Alkemy.rootNode(TestClass.class);
 
         System.out.println("Create 1e6 objects (custom): " + Measure.measure(() ->
         {
@@ -108,7 +104,7 @@ public class AlkemyVisitorTests
     @Test
     public void performanceWriteAnObjUsingPreorderVisitor() throws Throwable
     {
-        final RootNode<TestClass, ? extends VisitableAlkemyElement> node = Alkemy.rootNode(TestClass.class);
+        final TypedNode<TestClass, ? extends VisitableAlkemyElement> node = Alkemy.rootNode(TestClass.class);
         final ObjectWriter ow = new ObjectWriter(new Constant<VisitableAlkemyElement>(55));
         final AlkemyPreorderReader<TestClass, Object> apr = new AlkemyPreorderReader<TestClass, Object>(INSTANTIATE_NODES);
 
@@ -326,13 +322,6 @@ public class AlkemyVisitorTests
         {
             return Bar.class == type;
         }
-
-        @Retention(RetentionPolicy.RUNTIME)
-        @Target({ ElementType.FIELD })
-        @AlkemyLeaf(Bar.class)
-        public @interface Bar
-        {
-        }
     }
 
     static class ObjectWriter implements AlkemyElementVisitor<Object, VisitableAlkemyElement>
@@ -400,7 +389,7 @@ public class AlkemyVisitorTests
         @Override
         public void visit(VisitableAlkemyElement e, Object parent)
         {
-            names.add(e.targetName());
+            names.add(e.valueName());
         }
 
         @Override

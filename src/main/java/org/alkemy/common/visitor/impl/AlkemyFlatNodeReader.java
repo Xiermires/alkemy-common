@@ -24,7 +24,7 @@ import org.alkemy.common.parse.impl.VisitableAlkemyElement;
 import org.alkemy.common.visitor.AlkemyElementVisitor;
 import org.alkemy.common.visitor.FixedAlkemyTypeReader;
 import org.alkemy.util.Assertions;
-import org.alkemy.util.Nodes.RootNode;
+import org.alkemy.util.Nodes.TypedNode;
 
 /**
  * A fast reader implementation for flat nodes (nodes with children, but no grand children) defining
@@ -38,16 +38,16 @@ import org.alkemy.util.Nodes.RootNode;
  */
 public class AlkemyFlatNodeReader<R, P, E extends VisitableAlkemyElement> implements FixedAlkemyTypeReader<R, P, E>
 {
-    private final RootNode<R, ? extends VisitableAlkemyElement> root;
+    private final TypedNode<R, ? extends VisitableAlkemyElement> root;
     private final E[] leafs;
     private final Object[] args;
 
     @SuppressWarnings("unchecked")
-    public AlkemyFlatNodeReader(RootNode<R, ? extends VisitableAlkemyElement> node, Function<VisitableAlkemyElement, E> factory)
+    public AlkemyFlatNodeReader(TypedNode<R, ? extends VisitableAlkemyElement> node, Function<VisitableAlkemyElement, E> factory)
     {
         Assertions.noneNull(node, factory);
         Assertions.isTrue(node.branchDepth() == 1,
-                "The node of type : '%s' is not a flat node (has children, hasn't grandchildren", node.data().targetName());
+                "The node of type : '%s' is not a flat node (has children, hasn't grandchildren", node.data().valueName());
 
         final List<E> list = node.children().stream().map(e -> factory.apply(new VisitableAlkemyElement(e.data())))
                 .collect(Collectors.toList());

@@ -15,12 +15,7 @@
  *******************************************************************************/
 package org.alkemy.common;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-
-import org.alkemy.annotations.AlkemyLeaf;
+import org.alkemy.Bar;
 import org.alkemy.common.parse.impl.VisitableAlkemyElement;
 import org.alkemy.common.visitor.AlkemyElementVisitor;
 
@@ -49,12 +44,5 @@ public class AssignConstant<P, T> implements AlkemyElementVisitor<P, VisitableAl
     public boolean accepts(Class<?> type)
     {
         return Bar.class.equals(type);
-    }
-
-    @Retention(RetentionPolicy.RUNTIME)
-    @Target({ ElementType.FIELD })
-    @AlkemyLeaf(Bar.class)
-    public @interface Bar
-    {
     }
 }

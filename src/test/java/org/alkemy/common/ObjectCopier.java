@@ -18,7 +18,7 @@ package org.alkemy.common;
 import org.alkemy.common.parse.impl.VisitableAlkemyElement;
 import org.alkemy.common.visitor.AlkemyNodeHandler;
 import org.alkemy.util.Node;
-import org.alkemy.util.Nodes.RootNode;
+import org.alkemy.util.Nodes.TypedNode;
 import org.objenesis.Objenesis;
 import org.objenesis.ObjenesisStd;
 
@@ -27,7 +27,7 @@ public class ObjectCopier<T> implements AlkemyNodeHandler<T, Object>
     private Objenesis objenesis = new ObjenesisStd();
     
     @Override
-    public T handle(RootNode<T, ? extends VisitableAlkemyElement> root, T orig)
+    public T handle(TypedNode<T, ? extends VisitableAlkemyElement> root, T orig)
     {
         @SuppressWarnings("unchecked")
         final T dest = (T) objenesis.newInstance(orig.getClass());

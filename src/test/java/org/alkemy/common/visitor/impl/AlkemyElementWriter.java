@@ -21,12 +21,12 @@ import org.alkemy.common.parse.impl.VisitableAlkemyElement;
 import org.alkemy.common.visitor.AlkemyElementVisitor;
 import org.alkemy.common.visitor.AlkemyNodeReader;
 import org.alkemy.util.Node;
-import org.alkemy.util.Nodes.RootNode;
+import org.alkemy.util.Nodes.TypedNode;
 
 public class AlkemyElementWriter<R, P> implements AlkemyNodeReader<R, P>
 {
     @Override
-    public R create(AlkemyElementVisitor<?, ?> aev, RootNode<R, ? extends VisitableAlkemyElement> root)
+    public R create(AlkemyElementVisitor<?, ?> aev, TypedNode<R, ? extends VisitableAlkemyElement> root)
     {
         final Parameters<P> params = new Parameters<>(aev, root.children().size());
         root.children().forEach(c -> processNode(aev, c, params));

@@ -20,7 +20,7 @@ import org.alkemy.common.visitor.AlkemyElementVisitor;
 import org.alkemy.common.visitor.AlkemyNodeReader;
 import org.alkemy.util.Assertions;
 import org.alkemy.util.Node;
-import org.alkemy.util.Nodes.RootNode;
+import org.alkemy.util.Nodes.TypedNode;
 
 /**
  * Common functionality of some traverses.
@@ -55,7 +55,7 @@ public abstract class AbstractTraverser<R, P> implements AlkemyNodeReader<R, P>
     }
     
     @Override
-    public R create(AlkemyElementVisitor<?, ?> aev, RootNode<R, ? extends VisitableAlkemyElement> root)
+    public R create(AlkemyElementVisitor<?, ?> aev, TypedNode<R, ? extends VisitableAlkemyElement> root)
     {
         Assertions.nonNull(root);
         
@@ -69,7 +69,7 @@ public abstract class AbstractTraverser<R, P> implements AlkemyNodeReader<R, P>
     }
 
     @Override
-    public R create(AlkemyElementVisitor<P, ?> aev, RootNode<R, ? extends VisitableAlkemyElement> root, P parameter)
+    public R create(AlkemyElementVisitor<P, ?> aev, TypedNode<R, ? extends VisitableAlkemyElement> root, P parameter)
     {
         Assertions.nonNull(root);
         
@@ -83,7 +83,7 @@ public abstract class AbstractTraverser<R, P> implements AlkemyNodeReader<R, P>
     }
 
     @Override
-    public R accept(AlkemyElementVisitor<?, ?> aev, RootNode<R, ? extends VisitableAlkemyElement> root, R parameter)
+    public R accept(AlkemyElementVisitor<?, ?> aev, TypedNode<R, ? extends VisitableAlkemyElement> root, R parameter)
     {
         Assertions.nonNull(root);
 
@@ -93,7 +93,7 @@ public abstract class AbstractTraverser<R, P> implements AlkemyNodeReader<R, P>
     }
 
     @Override
-    public R accept(AlkemyElementVisitor<P, ?> aev, RootNode<R, ? extends VisitableAlkemyElement> root, R param1, P param2)
+    public R accept(AlkemyElementVisitor<P, ?> aev, TypedNode<R, ? extends VisitableAlkemyElement> root, R param1, P param2)
     {
         Assertions.nonNull(root);
 

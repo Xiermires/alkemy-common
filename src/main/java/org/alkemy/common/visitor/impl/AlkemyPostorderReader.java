@@ -47,7 +47,7 @@ public class AlkemyPostorderReader<R, P> extends AbstractTraverser<R, P>
     {
         if (e.hasChildren())
         {
-            final Object node = AlkemyUtils.getInstance(e, parent, instantiateNodes);
+            final Object node = AlkemyUtils.getOrCreateNode(e, parent, instantiateNodes);
             if (includeNullNodes || node != null)
             {
                 e.children().forEach(c ->
@@ -71,7 +71,7 @@ public class AlkemyPostorderReader<R, P> extends AbstractTraverser<R, P>
     {
         if (e.hasChildren())
         {
-            final Object node = AlkemyUtils.getInstance(e, parent, instantiateNodes);
+            final Object node = AlkemyUtils.getOrCreateNode(e, parent, instantiateNodes);
             if (includeNullNodes || node != null)
             {
                 e.children().forEach(c ->

@@ -15,8 +15,8 @@
  *******************************************************************************/
 package org.alkemy.common;
 
+import org.alkemy.Bar;
 import org.alkemy.annotations.Order;
-import org.alkemy.common.AssignConstant.Bar;
 import org.alkemy.common.PropertyConcatenation.Foo;
 
 @Order({ "s0", "s1", "s2", "s3", "s4", "s5", "s6", "s7", "s8", "s9" })

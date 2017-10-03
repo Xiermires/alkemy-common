@@ -15,7 +15,7 @@
  *******************************************************************************/
 package org.alkemy.common.visitor.impl;
 
-import org.alkemy.common.visitor.impl.AlkemyVisitorTests.ObjectReader.Bar;
+import org.alkemy.Bar;
 
 public class TestReader
 {
@@ -31,11 +31,11 @@ public class TestReader
     @Bar
     int d = 55;
     
-    NestedA na = new NestedA();
+    public NestedA na = new NestedA();
     
-    NestedB nb = new NestedB();
+    public NestedB nb = new NestedB();
     
-    NestedA na2;
+    public NestedA na2;
     
     public static class NestedA
     {

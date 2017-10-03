@@ -43,7 +43,7 @@ public class AlkemyPreorderReader<R, P> extends AbstractTraverser<R, P>
     {
         if (e.hasChildren())
         {
-            final Object node = AlkemyUtils.getInstance(e, parent, instantiateNodes);
+            final Object node = AlkemyUtils.getOrCreateNode(e, parent, instantiateNodes);
             if (includeNullNodes || node != null)
             {
                 if (visitNodes) e.data().accept(aev, parent, parameter);
@@ -64,7 +64,7 @@ public class AlkemyPreorderReader<R, P> extends AbstractTraverser<R, P>
     {
         if (e.hasChildren())
         {
-            final Object node = AlkemyUtils.getInstance(e, parent, instantiateNodes);
+            final Object node = AlkemyUtils.getOrCreateNode(e, parent, instantiateNodes);
             if (includeNullNodes || node != null)
             {
                 if (visitNodes) e.data().accept(aev, parent);
