@@ -28,7 +28,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import org.alkemy.annotations.AlkemyLeaf;
-import org.alkemy.common.Alkemy;
+import org.alkemy.common.AlkemyCommon;
 import org.alkemy.common.parse.impl.VisitableAlkemyElement;
 import org.alkemy.common.visitor.AlkemyElementVisitor;
 import org.alkemy.util.Assertions;
@@ -40,7 +40,7 @@ public class RandomGenerator
     @Test
     public void generateRandoms()
     {
-        final TestClass tc = Alkemy.mature(TestClass.class, new XorRandomGenerator());
+        final TestClass tc = AlkemyCommon.mature(TestClass.class, new XorRandomGenerator());
 
         assertThat(tc.i, is(both(greaterThan(5)).and(lessThan(10)).or(equalTo(5)).or(equalTo(10))));
         assertThat(tc.d, is(both(greaterThan(9.25)).and(lessThan(11.5)).or(equalTo(9.25)).or(equalTo(11.5))));

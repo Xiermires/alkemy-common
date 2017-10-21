@@ -36,7 +36,7 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import org.alkemy.annotations.AlkemyLeaf;
-import org.alkemy.common.Alkemy.SingleTypeReader;
+import org.alkemy.common.AlkemyCommon.SingleTypeReader;
 import org.alkemy.common.parse.impl.VisitableAlkemyElement;
 import org.alkemy.common.util.PassThrough;
 import org.alkemy.common.visitor.AlkemyElementVisitor;
@@ -54,7 +54,7 @@ public class AlkemyTest
     public void testConcat()
     {
         final PropertyConcatenation<TestClass> concat = new PropertyConcatenation<>();
-        Alkemy.mature(new TestClass(), concat);
+        AlkemyCommon.mature(new TestClass(), concat);
 
         assertThat("01234", is(concat.get()));
     }
@@ -62,7 +62,7 @@ public class AlkemyTest
     @Test
     public void testAssign()
     {
-        final TestClass tc = Alkemy.mature(new TestClass(), new AssignConstant<>("bar"));
+        final TestClass tc = AlkemyCommon.mature(new TestClass(), new AssignConstant<>("bar"));
 
         assertThat(tc.s0, is("0"));
         assertThat(tc.s1, is("1"));
@@ -86,7 +86,7 @@ public class AlkemyTest
         tdc.testClass = tc;
 
         final ObjectCopier<TestDeepCopy> copier = new ObjectCopier<>();
-        final TestDeepCopy copy = copier.handle(Alkemy.rootNode(TestDeepCopy.class), tdc);
+        final TestDeepCopy copy = copier.handle(AlkemyCommon.rootNode(TestDeepCopy.class), tdc);
 
         assertThat(copy.testClass, is(not(nullValue())));
         assertThat(copy.testClass.s0, is("0"));
@@ -108,7 +108,7 @@ public class AlkemyTest
         final TestClass tc2 = new TestClass();
         tc1.s0 = "foo";
         tc2.s1 = "bar";
-        final TypedNode<TestClass, ? extends VisitableAlkemyElement> node = Alkemy.rootNode(TestClass.class);
+        final TypedNode<TestClass, ? extends VisitableAlkemyElement> node = AlkemyCommon.rootNode(TestClass.class);
         final ObjectCopier<TestClass> oc = new ObjectCopier<TestClass>();
 
         final List<String> s0s1 = new ArrayList<>();
@@ -129,7 +129,7 @@ public class AlkemyTest
     public void testCreateIterable()
     {
         final Set<TestClass> tcs = new HashSet<>();
-        for (TestClass tc : Alkemy.reader(TestClass.class).preorder(0).iterable(new AssignConstant<>("foo"), upTo100()))
+        for (TestClass tc : AlkemyCommon.reader(TestClass.class).preorder(0).iterable(new AssignConstant<>("foo"), upTo100()))
         {
             tcs.add(tc);
         }
@@ -154,7 +154,7 @@ public class AlkemyTest
     public void testStreamForEach()
     {
         final Set<TestClass> tcs = new HashSet<>();
-        Alkemy.reader(TestClass.class).preorder(0).stream(new AssignConstant<>("foo"), upTo100()).forEach(c -> tcs.add(c));
+        AlkemyCommon.reader(TestClass.class).preorder(0).stream(new AssignConstant<>("foo"), upTo100()).forEach(c -> tcs.add(c));
 
         assertThat(tcs.size(), is(100));
         for (TestClass tc : tcs)
@@ -175,7 +175,7 @@ public class AlkemyTest
     @Test
     public void testStreamFilter()
     {
-        final SingleTypeReader<TestClass, TestClass> anv = Alkemy.reader(TestClass.class).preorder(0);
+        final SingleTypeReader<TestClass, TestClass> anv = AlkemyCommon.reader(TestClass.class).preorder(0);
         final AssignConstant<TestClass, String> aev = new AssignConstant<>("foo");
         final Set<TestClass> tcs = new HashSet<>();
 
@@ -191,12 +191,12 @@ public class AlkemyTest
     public void testMethodInvoker()
     {
         final FooInvoker<TestMethodInvoker> aev = new FooInvoker<TestMethodInvoker>();
-        Alkemy.reader(TestMethodInvoker.class).preorder(VISIT_NODES).create(aev);
+        AlkemyCommon.reader(TestMethodInvoker.class).preorder(VISIT_NODES).create(aev);
         
         assertThat(aev.foo, is("foo"));
         
         final BarInvoker aev2 = new BarInvoker();
-        Alkemy.reader(TestMethodInvoker.class, String.class).preorder(VISIT_NODES).create(aev2, "bar");
+        AlkemyCommon.reader(TestMethodInvoker.class, String.class).preorder(VISIT_NODES).create(aev2, "bar");
         
         assertThat(aev2.bar, is("bar"));
     }
@@ -204,7 +204,7 @@ public class AlkemyTest
     @Test
     public void peformanceElementVisitor() throws Throwable
     {
-        final SingleTypeReader<TestClass, TestClass> anv = Alkemy.reader(TestClass.class).preorder(0);
+        final SingleTypeReader<TestClass, TestClass> anv = AlkemyCommon.reader(TestClass.class).preorder(0);
         final AssignConstant<TestClass, String> aev = new AssignConstant<>("foo");
         final TestClass tc = new TestClass();
 
@@ -220,7 +220,7 @@ public class AlkemyTest
     @Test
     public void peformanceElementVisitorNoInstr() throws Throwable
     {
-        final SingleTypeReader<TestClassNoInstr, TestClassNoInstr> anv = Alkemy.reader(TestClassNoInstr.class).preorder(0);
+        final SingleTypeReader<TestClassNoInstr, TestClassNoInstr> anv = AlkemyCommon.reader(TestClassNoInstr.class).preorder(0);
         final AssignConstant<TestClassNoInstr, String> aev = new AssignConstant<>("foo");
         final TestClassNoInstr tc = new TestClassNoInstr(); // do not include in the suite.
 
@@ -236,7 +236,7 @@ public class AlkemyTest
     @Test
     public void peformanceTypeVisitor() throws Throwable
     {
-        final SingleTypeReader<TestClass, TestClass> anv = Alkemy.reader(TestClass.class).preorder(0);
+        final SingleTypeReader<TestClass, TestClass> anv = AlkemyCommon.reader(TestClass.class).preorder(0);
         final PassThrough<TestClass> aev = new PassThrough<>();
         final TestClass tc = new TestClass();
 
@@ -252,7 +252,7 @@ public class AlkemyTest
     @Test
     public void peformanceFastVisitorAssign() throws Throwable
     {
-        final TypedNode<TestFastVisitor, ? extends VisitableAlkemyElement> node = Alkemy.rootNode(TestFastVisitor.class);
+        final TypedNode<TestFastVisitor, ? extends VisitableAlkemyElement> node = AlkemyCommon.rootNode(TestFastVisitor.class);
         final FastSameFlatObjConcept<TestFastVisitor> anv = new FastSameFlatObjConcept<>();
         final TestFastVisitor tfv = new TestFastVisitor();
 
@@ -268,7 +268,7 @@ public class AlkemyTest
     @Test
     public void peformanceFastVisitorAssignUsingParallelStream() throws Throwable
     {
-        final TypedNode<TestFastVisitor, ? extends VisitableAlkemyElement> node = Alkemy.rootNode(TestFastVisitor.class);
+        final TypedNode<TestFastVisitor, ? extends VisitableAlkemyElement> node = AlkemyCommon.rootNode(TestFastVisitor.class);
         final FastSameFlatObjConcept<TestFastVisitor> anv = new FastSameFlatObjConcept<>();
         final TestFastVisitor tfv = new TestFastVisitor();
 
@@ -288,7 +288,7 @@ public class AlkemyTest
     @Test
     public void peformanceFastVisitorCreate() throws Throwable
     {
-        final TypedNode<TestFastVisitor, ? extends VisitableAlkemyElement> node = Alkemy.rootNode(TestFastVisitor.class);
+        final TypedNode<TestFastVisitor, ? extends VisitableAlkemyElement> node = AlkemyCommon.rootNode(TestFastVisitor.class);
         final FastSameFlatObjConcept<TestFastVisitor> anv = new FastSameFlatObjConcept<>();
 
         System.out.println("Fast visitor 1e6 create (10 fields): " + Measure.measure(() ->

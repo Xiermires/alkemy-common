@@ -31,8 +31,8 @@ import java.util.Stack;
 
 import org.alkemy.Bar;
 import org.alkemy.annotations.AlkemyLeaf;
-import org.alkemy.common.Alkemy;
-import org.alkemy.common.Alkemy.SingleTypeReader;
+import org.alkemy.common.AlkemyCommon;
+import org.alkemy.common.AlkemyCommon.SingleTypeReader;
 import org.alkemy.common.parse.impl.VisitableAlkemyElement;
 import org.alkemy.common.util.AbstractAlkemyValueProvider;
 import org.alkemy.common.visitor.AlkemyElementVisitor;
@@ -48,7 +48,7 @@ public class AlkemyVisitorTests
     public void testReadAnObject()
     {
         final ObjectReader or = new ObjectReader(new Stack<Integer>());
-        Alkemy.mature(new TestReader(), or);
+        AlkemyCommon.mature(new TestReader(), or);
         assertThat(or.stack.size(), is(8));
     }
 
@@ -56,7 +56,7 @@ public class AlkemyVisitorTests
     public void testWriteAnObjUsingPreorderVisitor()
     {
         final AlkemyPreorderReader<TestWriter, Object> aew = new AlkemyPreorderReader<>(INCLUDE_NULL_BRANCHES | INSTANTIATE_NODES);
-        final TypedNode<TestWriter, ? extends VisitableAlkemyElement> node = Alkemy.rootNode(TestWriter.class);
+        final TypedNode<TestWriter, ? extends VisitableAlkemyElement> node = AlkemyCommon.rootNode(TestWriter.class);
         final ObjectWriter ow = new ObjectWriter(new Constant<>(55));
         final TestWriter tw = TestWriter.class.cast(aew.create(ow, node));
 
@@ -75,7 +75,7 @@ public class AlkemyVisitorTests
     {
         final AlkemyElementWriter<TestClass, Object> aew = new AlkemyElementWriter<>();
         final ObjectWriter ow = new ObjectWriter(new Constant<VisitableAlkemyElement>(55));
-        final TypedNode<TestClass, ? extends VisitableAlkemyElement> node = Alkemy.rootNode(TestClass.class);
+        final TypedNode<TestClass, ? extends VisitableAlkemyElement> node = AlkemyCommon.rootNode(TestClass.class);
 
         System.out.println("Create 1e6 objects (custom): " + Measure.measure(() ->
         {
@@ -89,7 +89,7 @@ public class AlkemyVisitorTests
     @Test
     public void performanceWriteAnObjectUsingBulkReader() throws Throwable
     {
-        final AlkemyFlatNodeReader<TestClass, Object, VisitableAlkemyElement> anr = new AlkemyFlatNodeReader<>(Alkemy.rootNode(TestClass.class), f -> f);
+        final AlkemyFlatNodeReader<TestClass, Object, VisitableAlkemyElement> anr = new AlkemyFlatNodeReader<>(AlkemyCommon.rootNode(TestClass.class), f -> f);
 
         final ObjectWriter ow = new ObjectWriter(new Constant<VisitableAlkemyElement>(55));
         System.out.println("Create 1e6 objects (bulkreader): " + Measure.measure(() ->
@@ -104,7 +104,7 @@ public class AlkemyVisitorTests
     @Test
     public void performanceWriteAnObjUsingPreorderVisitor() throws Throwable
     {
-        final TypedNode<TestClass, ? extends VisitableAlkemyElement> node = Alkemy.rootNode(TestClass.class);
+        final TypedNode<TestClass, ? extends VisitableAlkemyElement> node = AlkemyCommon.rootNode(TestClass.class);
         final ObjectWriter ow = new ObjectWriter(new Constant<VisitableAlkemyElement>(55));
         final AlkemyPreorderReader<TestClass, Object> apr = new AlkemyPreorderReader<TestClass, Object>(INSTANTIATE_NODES);
 
@@ -126,7 +126,7 @@ public class AlkemyVisitorTests
         tr.na2 = null;
         tr.nb = null;
 
-        new AlkemyPreorderReader<TestReader, Object>(VISIT_NODES).accept(ns, Alkemy.rootNode(TestReader.class), tr);
+        new AlkemyPreorderReader<TestReader, Object>(VISIT_NODES).accept(ns, AlkemyCommon.rootNode(TestReader.class), tr);
 
         assertThat(ns.names.pop(), is("org.alkemy.common.visitor.impl.TestReader$NestedA.b"));
         assertThat(ns.names.pop(), is("org.alkemy.common.visitor.impl.TestReader$NestedA.a"));
@@ -148,7 +148,7 @@ public class AlkemyVisitorTests
         tr.na2 = null;
         tr.nb = null;
 
-        new AlkemyPostorderReader<TestReader, Object>(VISIT_NODES).accept(ns, Alkemy.rootNode(TestReader.class), tr);
+        new AlkemyPostorderReader<TestReader, Object>(VISIT_NODES).accept(ns, AlkemyCommon.rootNode(TestReader.class), tr);
 
         assertThat(ns.names.pop(), is("org.alkemy.common.visitor.impl.TestReader"));
         assertThat(ns.names.pop(), is("org.alkemy.common.visitor.impl.TestReader.na"));
@@ -170,7 +170,7 @@ public class AlkemyVisitorTests
         tr.na2 = null;
         tr.nb = null;
 
-        new AlkemyPreorderReader<TestReader, Object>(INCLUDE_NULL_BRANCHES | VISIT_NODES).accept(ns, Alkemy.rootNode(
+        new AlkemyPreorderReader<TestReader, Object>(INCLUDE_NULL_BRANCHES | VISIT_NODES).accept(ns, AlkemyCommon.rootNode(
                 TestReader.class), tr);
 
         assertThat(ns.names.pop(), is("org.alkemy.common.visitor.impl.TestReader$NestedA.b"));
@@ -199,7 +199,7 @@ public class AlkemyVisitorTests
         tr.na2 = null;
         tr.nb = null;
 
-        new AlkemyPostorderReader<TestReader, Object>(INCLUDE_NULL_BRANCHES | VISIT_NODES).accept(ns, Alkemy.rootNode(
+        new AlkemyPostorderReader<TestReader, Object>(INCLUDE_NULL_BRANCHES | VISIT_NODES).accept(ns, AlkemyCommon.rootNode(
                 TestReader.class), tr);
 
         assertThat(ns.names.pop(), is("org.alkemy.common.visitor.impl.TestReader"));
@@ -226,7 +226,7 @@ public class AlkemyVisitorTests
         final AlkemyTypeCounter<TestVisitorController> countBs = new AlkemyTypeCounter<>(B.class);
         final AlkemyVisitorController<TestVisitorController> avc = new AlkemyVisitorController<>(Arrays.asList(countAs, countBs));
 
-        Alkemy.reader(TestVisitorController.class).preorder(0).accept(avc, new TestVisitorController());
+        AlkemyCommon.reader(TestVisitorController.class).preorder(0).accept(avc, new TestVisitorController());
 
         assertThat(countAs.counter, is(5));
         assertThat(countBs.counter, is(5));
@@ -236,7 +236,7 @@ public class AlkemyVisitorTests
     public void testBulkVisitor()
     {
         final AlkemyFlatNodeReader<TestVisitorController, Object, VisitableAlkemyElement> bulkVisitor = new AlkemyFlatNodeReader<>(
-                Alkemy.rootNode(TestVisitorController.class), f -> f);
+                AlkemyCommon.rootNode(TestVisitorController.class), f -> f);
 
         final AlkemyTypeCounter<TestVisitorController> countAs = new AlkemyTypeCounter<>(A.class);
         for (int i = 0; i < 100; i++)
@@ -250,7 +250,7 @@ public class AlkemyVisitorTests
     @Test
     public void performanceBulkReader() throws Throwable
     {
-        final AlkemyFlatNodeReader<TestVisitorController, Object, VisitableAlkemyElement> anr = new AlkemyFlatNodeReader<>(Alkemy
+        final AlkemyFlatNodeReader<TestVisitorController, Object, VisitableAlkemyElement> anr = new AlkemyFlatNodeReader<>(AlkemyCommon
                 .rootNode(TestVisitorController.class), f -> f);
 
         final AlkemyTypeCounter<TestVisitorController> countAs = new AlkemyTypeCounter<>(A.class);
@@ -266,7 +266,7 @@ public class AlkemyVisitorTests
     @Test
     public void performancePreorderTraverser() throws Throwable
     {
-        final SingleTypeReader<TestVisitorController, TestVisitorController> anr = Alkemy.reader(TestVisitorController.class)
+        final SingleTypeReader<TestVisitorController, TestVisitorController> anr = AlkemyCommon.reader(TestVisitorController.class)
                 .preorder(0);
 
         final AlkemyTypeCounter<TestVisitorController> countAs = new AlkemyTypeCounter<>(A.class);
@@ -282,7 +282,7 @@ public class AlkemyVisitorTests
     @Test
     public void performancePostorderTraverser() throws Throwable
     {
-        final SingleTypeReader<TestVisitorController, TestVisitorController> anr = Alkemy.reader(TestVisitorController.class)
+        final SingleTypeReader<TestVisitorController, TestVisitorController> anr = AlkemyCommon.reader(TestVisitorController.class)
                 .postorder(0);
 
         final AlkemyTypeCounter<TestVisitorController> countAs = new AlkemyTypeCounter<>(A.class);

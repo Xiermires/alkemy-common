@@ -29,15 +29,14 @@ import org.alkemy.annotations.AlkemyLeaf;
 import org.alkemy.common.parse.impl.VisitableAlkemyElement;
 import org.alkemy.common.visitor.AlkemyElementVisitor;
 import org.alkemy.common.visitor.AlkemyNodeHandler;
-import org.alkemy.common.visitor.AlkemyNodeReader;
 import org.alkemy.common.visitor.AlkemyNodeHandler.Entry;
+import org.alkemy.common.visitor.AlkemyNodeReader;
 import org.alkemy.common.visitor.impl.AlkemyPostorderReader;
 import org.alkemy.common.visitor.impl.AlkemyPreorderReader;
 import org.alkemy.common.visitor.impl.NodeReaderToVisitorAdapter;
 import org.alkemy.instr.AlkemizerCTF;
 import org.alkemy.parse.AlkemyParser;
 import org.alkemy.parse.impl.AlkemyElement;
-import org.alkemy.parse.impl.AlkemyParsers;
 import org.alkemy.util.Node;
 import org.alkemy.util.Nodes.TypedNode;
 
@@ -56,7 +55,7 @@ import org.alkemy.util.Nodes.TypedNode;
  * If a type define alkemizations which are not supported by the used visitors, those alkemy
  * elements are left unprocessed.
  */
-public class Alkemy
+public class AlkemyCommon
 {
     private static boolean instrumenting = false;
 
@@ -176,7 +175,7 @@ public class Alkemy
     }
     
     /**
-     * Part of the simple Alkemy syntax sugar. See {@link Alkemy}.
+     * Part of the simple Alkemy syntax sugar. See {@link AlkemyCommon}.
      * <p>
      * This class reproduces all Alkemy operations removing the Node parameter from the signature.
      */
